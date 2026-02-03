@@ -4,5 +4,7 @@ python-dotenv
 pypdf
 langchain
 langchain-community
+langchain-openai
 langchain-groq
 tiktoken
+python-multipart
