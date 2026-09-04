@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import DocumentSelector from "./DocumentSelector";
 import axios from "axios";
 
-const API_BASE = "http://127.0.0.1:4000";
-
+const API_BASE = "https://fixed-content-qa-agent-3.onrender.com";
 function App() {
   const [uploaded, setUploaded] = useState(false);
   const [question, setQuestion] = useState("");
