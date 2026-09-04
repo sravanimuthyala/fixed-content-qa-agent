@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
+from typing import List
 
 from services.docstore import doc_store
 from agent.agent_builder import create_qa_agent
@@ -11,13 +12,14 @@ class QuestionRequest(BaseModel):
     question: str
 
 
+
 @router.post("/upload")
-async def upload_files(files: list[UploadFile] = File(...)):
+async def upload_files(files: List[UploadFile] = File(...)):
     texts = []
 
     for file in files:
-        content = (await file.read()).decode("utf-8")
-        texts.append(content)
+        content = await file.read()
+        texts.append(content.decode("utf-8"))
 
     doc_store.add_texts(texts)
 
@@ -25,7 +27,6 @@ async def upload_files(files: list[UploadFile] = File(...)):
         "status": "success",
         "message": "Files uploaded and stored in memory."
     }
-
 
 @router.post("/ask")
 async def ask_question(req: QuestionRequest):
