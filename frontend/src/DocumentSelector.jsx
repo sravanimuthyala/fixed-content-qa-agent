@@ -35,7 +35,9 @@ const DocumentSelector = ({ setUploaded }) => {
       setLoading(true);
       setUploadStatus("Uploading...");
 
-     await axios.post(`${API_BASE}/upload`, formData);
+     await axios.post(`${API_BASE}/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setUploadStatus("✅ Files uploaded!");
       setUploaded(true);
