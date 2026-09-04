@@ -3,8 +3,7 @@ import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-
-const DocumentSelector = ({ setUploaded }) => {
+const DocumentSelector = ({ setUploaded, setDocContext }) => {
   const [files, setFiles] = useState([]);
   const [uploadStatus, setUploadStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,25 +34,28 @@ const DocumentSelector = ({ setUploaded }) => {
       setLoading(true);
       setUploadStatus("Uploading...");
 
-     await axios.post(`${API_BASE}/upload`, formData, {
+      const res = await axios.post(`${API_BASE}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setUploadStatus("✅ Files uploaded!");
-      setUploaded(true);
+      if (res.data.text) {
+        setDocContext(res.data.text);
+        setUploadStatus("✅ Files uploaded & processed!");
+        setUploaded(true);
+      }
     } catch (err) {
       console.error(err);
       setUploadStatus("❌ Upload failed.");
+      setUploaded(false);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{margin:"19px", border: "1px solid #ddd", padding: "20px", borderRadius: "6px" }}>
-      <h3 style={{margin:"9px"}}>Upload Documents</h3>
+    <div style={{ margin: "19px", border: "1px solid #ddd", padding: "20px", borderRadius: "6px" }}>
+      <h3 style={{ margin: "9px" }}>Upload Documents</h3>
 
-      {/* Drag & Drop Area */}
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -69,7 +71,6 @@ const DocumentSelector = ({ setUploaded }) => {
 
       <input type="file" multiple onChange={handleFileChange} />
 
-      {/* Show selected files */}
       {files.length > 0 && (
         <ul style={{ marginTop: "10px" }}>
           {files.map((file, idx) => (
