@@ -10,7 +10,7 @@ app = FastAPI(title="Fixed Content Q&A Agent")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://fixed-content-qa-agent.netlify.app/",
+        "https://fixed-content-qa-agent.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
