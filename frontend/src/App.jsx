@@ -3,37 +3,41 @@ import DocumentSelector from "./DocumentSelector";
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
+
 function App() {
   const [uploaded, setUploaded] = useState(false);
+  const [docContext, setDocContext] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleAsk = async () => {
-    if (!uploaded) {
+    if (!uploaded || !docContext) {
       alert("Please upload documents first");
       return;
     }
 
-    // ✅ Prevent empty questions
     if (!question.trim()) return;
 
     setLoading(true);
-   // App.jsx inside handleAsk
-try {
-  const res = await axios.post(`${API_BASE}/ask`, { question });
-  setAnswer(res.data.answer);
-  setQuestion("");
-} catch (err) {
-  console.error(err);
-  if (err.response && err.response.status === 400) {
-    setAnswer("Server memory cleared. Please re-upload your document and try again.");
-    setUploaded(false); // Reset upload flag so user knows to re-upload
-  } else {
-    setAnswer("Error fetching answer from server.");
-  }
-}
-    setLoading(false);
+    try {
+      const res = await axios.post(`${API_BASE}/ask`, { 
+        question: question,
+        context: docContext 
+      });
+      setAnswer(res.data.answer);
+      setQuestion("");
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.status === 400) {
+        setAnswer("Document context missing. Please re-upload your document.");
+        setUploaded(false);
+      } else {
+        setAnswer("Error fetching answer from server.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,10 +62,8 @@ try {
       >
         <h1 style={{ textAlign: "center" }}>Fixed Content Q&A Agent</h1>
 
-        {/* Upload component */}
-        <DocumentSelector setUploaded={setUploaded} />
+        <DocumentSelector setUploaded={setUploaded} setDocContext={setDocContext} />
 
-        {/* Ask section */}
         <div style={{ marginTop: "40px", display: "flex", gap: "10px" }}>
           <input
             style={{
