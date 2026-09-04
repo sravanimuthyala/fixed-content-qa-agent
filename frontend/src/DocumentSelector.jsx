@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE = "https://fixed-content-qa-agent-3.onrender.com";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 
 const DocumentSelector = ({ setUploaded }) => {
