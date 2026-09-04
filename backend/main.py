@@ -12,7 +12,6 @@ app.add_middleware(
     allow_origins=[
         "https://fixed-content-qa-agent.netlify.app/",
     ],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
