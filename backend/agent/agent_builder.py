@@ -10,9 +10,10 @@ load_dotenv()
 
 def create_qa_agent():
     llm = ChatGroq(
-        model="llama-3.1-8b-instant",
-        temperature=0,
-        api_key=os.getenv("GROQ_API_KEY")
+       model="llama-3.3-70b-versatile",
+        openai_api_base="https://api.groq.com/openai/v1",
+        openai_api_key=os.getenv("GROQ_API_KEY"),
+        temperature=0
     )
 
     prompt = ChatPromptTemplate.from_messages([
