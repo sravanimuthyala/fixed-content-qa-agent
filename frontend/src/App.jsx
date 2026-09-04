@@ -19,16 +19,20 @@ function App() {
     if (!question.trim()) return;
 
     setLoading(true);
-    try {
-      const res = await axios.post(`${API_BASE}/ask`, { question });
-      setAnswer(res.data.answer);
-
-      // ✅ Clear input after asking
-      setQuestion("");
-    } catch (err) {
-      console.error(err);
-      setAnswer("Error fetching answer.");
-    }
+   // App.jsx inside handleAsk
+try {
+  const res = await axios.post(`${API_BASE}/ask`, { question });
+  setAnswer(res.data.answer);
+  setQuestion("");
+} catch (err) {
+  console.error(err);
+  if (err.response && err.response.status === 400) {
+    setAnswer("Server memory cleared. Please re-upload your document and try again.");
+    setUploaded(false); // Reset upload flag so user knows to re-upload
+  } else {
+    setAnswer("Error fetching answer from server.");
+  }
+}
     setLoading(false);
   };
 
